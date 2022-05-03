@@ -1,11 +1,13 @@
+# Local dirs
+secrets/*
+.env
+
 # Local .terraform directories
 **/.terraform/*
 
 # .tfstate files
 *.tfstate
 *.tfstate.*
-
-secrets/*
 
 # Crash log files
 crash.log
