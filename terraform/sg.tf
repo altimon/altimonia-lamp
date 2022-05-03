@@ -70,3 +70,70 @@ resource "aws_db_subnet_group" "altimonia_database_subnet_group" {
     Name = "altimonia_database_subnet_group"
   }
 }
+
+#More granular SGs
+
+resource "aws_security_group" "ssh" {
+  name        = "ssh"
+  description = "SSH traffic"
+  vpc_id      = aws_vpc.altimonia_vpc.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "http" {
+  name        = "http"
+  description = "HTTP traffic"
+  vpc_id      = aws_vpc.altimonia_vpc.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "https" {
+  name        = "https"
+  description = "HTTPS traffic"
+  vpc_id      = aws_vpc.altimonia_vpc.id
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "egress_all" {
+  name        = "egress-all"
+  description = "Allow all outbound traffic"
+  vpc_id      = aws_vpc.altimonia_vpc.id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "ingress_api" {
+  name        = "ingress-api"
+  description = "Allow ingress to API"
+  vpc_id      = aws_vpc.altimonia_vpc.id
+
+  ingress {
+    from_port   = 5000
+    to_port     = 5000
+    protocol    = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

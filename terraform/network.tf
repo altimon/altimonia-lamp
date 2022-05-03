@@ -18,6 +18,17 @@ resource "aws_subnet" "altimonia_vpc_public_subnet" {
   }
 }
 
+#create public subnet two
+resource "aws_subnet" "altimonia_vpc_public_subnet_two" {
+  vpc_id                  = aws_vpc.altimonia_vpc.id
+  cidr_block              = var.subnet_four_cidr
+  availability_zone       = data.aws_availability_zones.availability_zones.names[1]
+  map_public_ip_on_launch = true
+  tags = {
+    Name = "altimonia_vpc_public_subnet_two"
+  }
+}
+
 #create private subnet one
 resource "aws_subnet" "altimonia_vpc_private_subnet_one" {
   vpc_id            = aws_vpc.altimonia_vpc.id
