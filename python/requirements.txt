@@ -1,6 +1,7 @@
 Flask >=  2.1.2
-base64
+#base64
 boto3
 botocore
-cryptography
+cryptography >= 37.0.2
+#os
 pymysql
