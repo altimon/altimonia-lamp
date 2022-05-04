@@ -1,7 +1,6 @@
 locals {
-  image = "var.repository_url:image_tag"
-  #TODO change to var aws_id
-  execution_role_arn = "arn:aws:iam::569387170030:role/ecsTaskExecutionRole"
+  image              = "var.repository_url:var.image_tag"
+  execution_role_arn = aws_iam_role.altimonia_api_task_execution_role.arn
 }
 
 resource "aws_cloudwatch_log_group" "altimonia_api" {
@@ -38,11 +37,12 @@ resource "aws_ecs_task_definition" "altimonia-ecs-task-definition" {
   memory                   = "1024"
   cpu                      = "512"
   execution_role_arn       = local.execution_role_arn
-  container_definitions = jsonencode(
+  #             "image" : "569387170030.dkr.ecr.us-east-1.amazonaws.com/altimonia-ecr/mysql-flask:latest",
+  container_definitions = <<DEFINE
     [
       {
         "name" : "altimonia-container",
-        "image" : "569387170030.dkr.ecr.us-east-1.amazonaws.com/altimonia-ecr:mysql-flask",
+        "image" : "${aws_ecr_repository.altimonia.repository_url}:${var.image_tag}",
         "memory" : 1024,
         "cpu" : 512,
         "essential" : true,
@@ -50,8 +50,14 @@ resource "aws_ecs_task_definition" "altimonia-ecs-task-definition" {
         "portMappings" : [
           {
             "containerPort" : 5000,
-            "hostPort" : 5000,
-          },
+            "hostPort" : 5000
+          }
+        ],
+        "environment" : [
+          {
+            "name" : "host",
+            "value" : "${aws_db_instance.altimonia_database_instance.address}"
+          }
         ],
         "logConfiguration" : {
           "logDriver" : "awslogs",
@@ -59,9 +65,9 @@ resource "aws_ecs_task_definition" "altimonia-ecs-task-definition" {
             "awslogs-region" : "us-east-1",
             "awslogs-group" : "/ecs/altimonia-api",
             "awslogs-stream-prefix" : "ecs"
-          },
-        },
+          }
+        }
       }
     ]
-  )
+DEFINE
 }

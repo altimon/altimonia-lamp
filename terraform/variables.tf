@@ -81,5 +81,5 @@ variable "dbpassword" {
 }
 
 variable "image_tag" {
-  default = "last"
+  default = "latest"
 }
