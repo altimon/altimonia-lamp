@@ -83,3 +83,7 @@ variable "dbpassword" {
 variable "image_tag" {
   default = "latest"
 }
+
+variable "container_port" {
+  default = ""
+}
